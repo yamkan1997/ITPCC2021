@@ -1,0 +1,30 @@
+# docker-compose.ovverride (extended config)
+version: '2'
+
+services:
+    react:
+        environment:
+            CHOKIDAR_USEPOLLING: "true"
+            NODE_ENV: development
+        ports:
+            - 3000:3000
+
+    deployment-api:
+        environment:
+            NODE_ENV: development
+        ports:
+            - 5000:5000
+    postgres:
+        environment:
+            POSTGRES_DB: jbpm
+            POSTGRES_USER: jbpm
+            POSTGRES_PASSWORD: jbpm
+
+    jbpm:
+        environment:
+            CHOKIDAR_USEPOLLING: "true"
+            JBPM_DB_DRIVER: postgres
+            JBPM_DB_HOST: postgres
+        ports:
+        - 8080:8080
+        - 8001:8001

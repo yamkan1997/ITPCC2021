@@ -1,0 +1,47 @@
+# docker-compose
+version: "2"
+
+volumes:
+    postgres_data:
+      driver: local
+
+services:
+    react:
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t
+        build: ./Web/
+        volumes:
+            - ./Web:/app/
+            - /app/node_modules
+        networks:
+            - webappnetwork
+
+    deployment-api:
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t
+        build: ./Services/Deploy-API/
+        volumes:
+            - ./Services/Deploy-API:/api/
+            - /api/node_modules
+        networks:
+            - webappnetwork
+
+    postgres:
+        image: postgres:9.6
+        volumes:
+        - postgres_data:/var/lib/postgresql/data
+        networks:
+            - webappnetwork
+
+    jbpm:
+        #image: jboss/jbpm-server-full
+        image: tobyjaguar/jbpm-server
+        depends_on:
+        - postgres
+        networks:
+            - webappnetwork
+
+networks:
+    webappnetwork:
+        driver: bridge
+    
